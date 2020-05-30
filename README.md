@@ -10,7 +10,13 @@
 
 > A simple tool to convert vue component to html 
 
+
 ## Table of Contents
+
+* [Install](#install)
+* [Usage](#usage)
+* [Contributors](#contributors)
+* [License](#license)
 
 
 ## Install
@@ -42,11 +48,17 @@ console.log(vue2Html.renderName());
 
 ## Contributors
 
+| Name                     | Website                      |
+| ------------------------ | ---------------------------- |
+| **Muhammad Athif Humam** | <https://athif23.github.io/> |
+
 
 ## License
 
+[MIT](LICENSE) © [Muhammad Athif Humam](https://athif23.github.io/)
 
-##
+
+## 
 
 [npm]: https://www.npmjs.com/
 
