@@ -81,13 +81,13 @@ compileToHTML(['./Component.vue', './Header.vue'], {
 
 ## TODO
 
-[ ] Add css plugins
-[ ] Can pass folder path as an argument, like './components'
-[ ] Add more test
+- [ ] Add css plugins
+- [ ] Can pass folder path as an argument, like './components'
+- [ ] Add more test
 
 > I'm honestly quite a newbie in this one, so if you can help, please do :)
 
-[ ] Convert raw string instead of file
+- [ ] Convert raw string instead of file
 
 > I haven't found a way to do this yet, and as far as I know, rollup only allowed file path to be passed to their input options. If someone know about this, please do tell me or you can just open up a PR. I would really appreciate it :)
 
