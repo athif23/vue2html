@@ -10,13 +10,14 @@
 
 > A simple tool to convert vue component to html 
 
+> DISCLAIMER: This library are still in development, so there's many missing features.
+
 
 ## Table of Contents
 
 * [Install](#install)
 * [Usage](#usage)
 * [TODO](#todo)
-  * [Convert string instead of file](#convert-string-instead-of-file)
 * [Contributors](#contributors)
 * [License](#license)
 
@@ -40,9 +41,11 @@ yarn add vue2html
 
 The usage should be pretty simple, you just need to pass your .vue file as the argument. You can pass one or more to it.
 
-```sh
-vue2html ./Component.vue, ./App.vue, ./Header.vue 
-```
+> This is not working, yet.
+>
+> ```sh
+> vue2html ./Component.vue, ./App.vue, ./Header.vue 
+> ```
 
 Or you can use the APIs provided, like `compileToHTML` or `compileToComponent`.
 
@@ -50,27 +53,46 @@ Or you can use the APIs provided, like `compileToHTML` or `compileToComponent`.
 const { compileToHTML } = require('vue2html');
 const path = require('path');
 
-const html = compileToHTML('./Component.vue', {
+// Single path
+compileToHTML('./Component.vue', {
+  // You can pass props here to pass to your component
+  // Do note that this is only for single path only!
+  props: {},
   // You can pass vue-server-renderer's `context`
-  context: {
+  context: { 
     title: 'vue ssr',
     metas: `
         <meta name="keyword" content="vue,ssr">
         <meta name="description" content="vue srr demo">
     `,
-  }
-});
+  },
+  // Automatically write to a file with the name of the component
+  writeToFile: true
+}).then(({ Component }) => console.log(Component.html));
 
-console.log(html);
-// script
+// Multiple path
+compileToHTML(['./Component.vue', './Header.vue'], {
+  // Note: the order of the props need to be the same 
+  // with the order of the paths
+  props: [
+    { name: "Athif Humam", count: 12 },
+    { color: 'black' }
+  ]
+})
 ```
 
 
 ## TODO
 
-### Convert string instead of file
+[ ] Add css plugins
+[ ] Can pass folder path as an argument, like './components'
+[ ] Add more test
 
-I have not found a way to do this, and as far as I know rollup only allowed file path to be passed to their input options. So if someone know how to overcome this, please do tell me or you can just open up a PR. I would really appreaciate them :)
+> I'm honestly quite a newbie in this one, so if you can help, please do :)
+
+[ ] Convert raw string instead of file
+
+> I haven't found a way to do this yet, and as far as I know, rollup only allowed file path to be passed to their input options. If someone know about this, please do tell me or you can just open up a PR. I would really appreciate it :)
 
 
 ## Contributors
