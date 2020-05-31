@@ -15,6 +15,8 @@
 
 * [Install](#install)
 * [Usage](#usage)
+* [TODO](#todo)
+  * [Convert string instead of file](#convert-string-instead-of-file)
 * [Contributors](#contributors)
 * [License](#license)
 
@@ -36,14 +38,39 @@ yarn add vue2html
 
 ## Usage
 
+The usage should be pretty simple, you just need to pass your .vue file as the argument. You can pass one or more to it.
+
+```sh
+vue2html ./Component.vue, ./App.vue, ./Header.vue 
+```
+
+Or you can use the APIs provided, like `compileToHTML` or `compileToComponent`.
+
 ```js
-const Vue2html = require('vue2html');
+const { compileToHTML } = require('vue2html');
+const path = require('path');
 
-const vue2Html = new Vue2html();
+const html = compileToHTML('./Component.vue', {
+  // You can pass vue-server-renderer's `context`
+  context: {
+    title: 'vue ssr',
+    metas: `
+        <meta name="keyword" content="vue,ssr">
+        <meta name="description" content="vue srr demo">
+    `,
+  }
+});
 
-console.log(vue2Html.renderName());
+console.log(html);
 // script
 ```
+
+
+## TODO
+
+### Convert string instead of file
+
+I have not found a way to do this, and as far as I know rollup only allowed file path to be passed to their input options. So if someone know how to overcome this, please do tell me or you can just open up a PR. I would really appreaciate them :)
 
 
 ## Contributors
