@@ -12,14 +12,20 @@
 
 > DISCLAIMER: This library are still in development, so there's many missing features.
 
+
+## Why I Made This
+
+Some of the project I made require me to convert vue components to HTML to made my life easier. After searching for a while, surprisingly I can't find any, so instead of give up about it, why not create it myself?
+
+
 ## Table of Contents
 
--   [Install](#install)
--   [Usage](#usage)
--   [TODO](#todo)
-    -   [Convert string instead of file](#convert-string-instead-of-file)
--   [Contributors](#contributors)
--   [License](#license)
+* [Install](#install)
+* [Usage](#usage)
+* [TODO](#todo)
+* [Contributors](#contributors)
+* [License](#license)
+
 
 ## Install
 
@@ -34,6 +40,7 @@ npm install vue2html
 ```sh
 yarn add vue2html
 ```
+
 
 ## Usage
 
@@ -79,17 +86,19 @@ compileToHTML(['./Component.vue', './Header.vue'], {
 })
 ```
 
+
 ## TODO
 
-- [ ] Add css plugins
-- [ ] Can pass folder path as an argument, like './components'
-- [ ] Add more test
+* [ ] Add css plugins
+* [ ] Can pass folder path as an argument, like `./components`
+* [ ] Add more test
 
 > I'm honestly quite a newbie in this one, so if you can help, please do :)
 
-- [ ] Convert raw string instead of file
+* [ ] Convert raw string instead of file
 
 > I haven't found a way to do this yet, and as far as I know, rollup only allowed file path to be passed to their input options. If someone know about this, please do tell me or you can just open up a PR. I would really appreciate it :)
+
 
 ## Contributors
 
@@ -97,9 +106,11 @@ compileToHTML(['./Component.vue', './Header.vue'], {
 | ------------------------ | ---------------------------- |
 | **Muhammad Athif Humam** | <https://athif23.github.io/> |
 
+
 ## License
 
 [MIT](LICENSE) © [Muhammad Athif Humam](https://athif23.github.io/)
+
 
 ## 
 
