@@ -12,15 +12,14 @@
 
 > DISCLAIMER: This library are still in development, so there's many missing features.
 
-
 ## Table of Contents
 
-* [Install](#install)
-* [Usage](#usage)
-* [TODO](#todo)
-* [Contributors](#contributors)
-* [License](#license)
-
+-   [Install](#install)
+-   [Usage](#usage)
+-   [TODO](#todo)
+    -   [Convert string instead of file](#convert-string-instead-of-file)
+-   [Contributors](#contributors)
+-   [License](#license)
 
 ## Install
 
@@ -35,7 +34,6 @@ npm install vue2html
 ```sh
 yarn add vue2html
 ```
-
 
 ## Usage
 
@@ -81,7 +79,6 @@ compileToHTML(['./Component.vue', './Header.vue'], {
 })
 ```
 
-
 ## TODO
 
 [ ] Add css plugins
@@ -94,18 +91,15 @@ compileToHTML(['./Component.vue', './Header.vue'], {
 
 > I haven't found a way to do this yet, and as far as I know, rollup only allowed file path to be passed to their input options. If someone know about this, please do tell me or you can just open up a PR. I would really appreciate it :)
 
-
 ## Contributors
 
 | Name                     | Website                      |
 | ------------------------ | ---------------------------- |
 | **Muhammad Athif Humam** | <https://athif23.github.io/> |
 
-
 ## License
 
 [MIT](LICENSE) © [Muhammad Athif Humam](https://athif23.github.io/)
-
 
 ## 
 
