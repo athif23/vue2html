@@ -1,34 +1,37 @@
 const test = require('ava');
 
-const { compileToHTML } = require('../src');
+const {compileToHTML} = require('../src');
 
 test.beforeEach(t => {
-  Object.assign(t.context, { props: 'Athif Humam' });
+    Object.assign(t.context, {props: 'Athif Humam'});
 });
 
 test('can render html', async t => {
-  const { App } = await compileToHTML('./test/fixtures/App.vue', {
-    props: { name: t.context.props }
-  });
-  const result = `<div data-server-rendered="true" data-v-d4599232><header data-v-d4599232>
-  This is header, Athif Humam
-</header>
-  Hello Athif Humam
-</div>`;
-  t.true(App.html.includes(result));
+    const {App} = await compileToHTML('./test/fixtures/App.vue', {
+        props: {name: t.context.props}
+    });
+    const result =
+        '<div data-server-rendered="true" data-v-d4599232><header data-v-d4599232>\n' +
+        '  This is header, Athif Humam\n';
+
+    t.true(App.includes(result));
 });
 
-// test('sets a config object', t => {
-//   const script = new Script(false);
-//   t.true(script instanceof Script);
-// });
+test('can render mutiple files', async t => {
+    const {App, Header} = await compileToHTML(
+        ['./test/fixtures/App.vue', './test/fixtures/Header.vue'],
+        {
+            props: [{name: t.context.props}, {name: 'Header Props'}]
+        }
+    );
+    const appResult =
+        '<div data-server-rendered="true" data-v-d4599232><header data-v-d4599232>\n' +
+        '  This is header, Athif Humam\n';
 
-// test('renders name', t => {
-//   const { script } = t.context;
-//   t.is(script.renderName(), 'script');
-// });
+    const headerResult =
+        '<header data-server-rendered="true">\n' +
+        '  This is header, Header Props\n';
 
-// test('sets a default name', t => {
-//   const { script } = t.context;
-//   t.is(script._name, 'script');
-// });
+    t.true(App.includes(appResult));
+    t.true(Header.includes(headerResult));
+});

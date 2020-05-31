@@ -58,17 +58,6 @@
   ],
   "license": "MIT",
   "main": "src/index.js",
-  "nyc": {
-    "check-coverage": true,
-    "lines": 80,
-    "functions": 80,
-    "branches": 80,
-    "reporter": [
-      "lcov",
-      "html",
-      "text"
-    ]
-  },
   "prettier": {
     "singleQuote": true,
     "bracketSpacing": true,
@@ -92,10 +81,7 @@
     "test-coverage": "npm run lint && npm run nyc"
   },
   "xo": {
-    "prettier": true,
-    "space": true,
-    "extends": [
-      "xo-lass"
-    ]
+    "prettier": false,
+    "space": 4
   }
 }
