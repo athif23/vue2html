@@ -16,7 +16,7 @@
     "Muhammad Athif Humam <emailta.indo@gmail.com> (https://athif23.github.io/)"
   ],
   "bin": {
-    "vue2html": "bin/cli"
+    "vue2html": "bin/cli.js"
   },
   "files": [
     "dist/**/*.js",
