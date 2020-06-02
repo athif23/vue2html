@@ -17,7 +17,6 @@
 
 * [Install](#install)
 * [Usage](#usage)
-* [Why I Made This](#why-i-made-this)
 * [Contributors](#contributors)
 * [License](#license)
 
@@ -39,15 +38,19 @@ yarn add vue2html
 
 ## Usage
 
-The usage should be pretty simple, you just need to pass your .vue file as the argument. You can pass one or more to it.
+The usage should be pretty simple, you just need to pass your `.vue` file as the argument. You can pass one or more to it.
 
-> This is not working, yet.
->
-> ```sh
-> vue2html ./Component.vue, ./App.vue, ./Header.vue 
-> ```
+```sh
+vue2html ./Component.vue, ./App.vue, ./Header.vue 
+```
 
-Or you can use the APIs provided, like `compileToHTML` or `compileToComponent`.
+You can also pass dir path to it,
+
+```sh
+vue2html ./components
+```
+
+Or you can also call it programmatically.
 
 ```js
 const { compileToHTML } = require('vue2html');
@@ -55,10 +58,8 @@ const path = require('path');
 
 // Single path
 compileToHTML('./Component.vue', {
-  // You can pass props here to pass to your component
-  // Do note that this is only for single path only!
   props: {},
-  // You can pass vue-server-renderer's `context`
+  // Pass vue-server-renderer's `context`
   context: { 
     title: 'vue ssr',
     metas: `
@@ -66,34 +67,30 @@ compileToHTML('./Component.vue', {
         <meta name="description" content="vue srr demo">
     `,
   },
-  // Automatically write to a file with the name of the component
   writeToFile: true
 }).then(({ Component }) => console.log(Component.html));
 
-// Multiple path
+// Multiple paths
 compileToHTML(['./Component.vue', './Header.vue'], {
-  // Note: the order of the props need to be the same 
-  // with the order of the paths
+  // Note: the order of the props need to be the same with the order of the paths
   props: [
     { name: "Athif Humam", count: 12 },
     { color: 'black' }
-  ]
+  ],
+  writeToFile: true
 })
 ```
+
+> I don't know if it would work, but if you pass the folder path instead of component path, I think it would be fine to pass the props like the Multiple paths example above. Just remember to pass them in exact order.
 
 ##### TODO
 
 * [ ] Add css plugins
-* [ ] Can pass folder path as an argument, like `./components`
+* [x] Can pass folder path as an argument, like `./components`
 * [ ] Add more test
 * [ ] Convert raw string instead of file
 
 > I haven't found a way to do this yet, and as far as I know, rollup only allowed file path to be passed to their input options. If someone know about this, please do tell me or you can just open up a PR. I would really appreciate it :)
-
-
-## Why I Made This
-
-Some of the project I made require me to convert vue components to HTML to made my life easier. After searching for a while, surprisingly I can't find any, so instead of give up about it, why not create it myself?
 
 
 ## Contributors
