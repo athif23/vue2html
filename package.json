@@ -89,6 +89,12 @@
   },
   "xo": {
     "prettier": false,
-    "space": 4
+    "space": 4,
+    "rules": {
+      "object-curly-spacing": "off",
+      "operator-linebreak": "off",
+      "space-before-function-paren": "off",
+      "no-else-return": "off"
+    }
   }
 }
