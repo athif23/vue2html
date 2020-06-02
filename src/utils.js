@@ -55,7 +55,7 @@ function resolvePaths(paths) {
     return paths;
 }
 
-module.exports = {
+export {
     isVueFile,
     getComponentName,
     parseStrToFunc,

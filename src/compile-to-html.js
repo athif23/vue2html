@@ -1,12 +1,13 @@
+import Vue from 'vue';
+import compileToComponent from './compile-to-component';
+import { isVueFile, getComponentName } from './utils';
+
 const fs = require('fs-extra');
 const path = require('path');
-const Vue = require('vue');
+
 const renderer = require('vue-server-renderer').createRenderer();
 
-const compileToComponent = require('./compile-to-component.js');
-const { isVueFile, getComponentName } = require('./utils');
-
-module.exports = async function(filenames = '', options = {}) {
+export default async function(filenames = '', options = {}) {
     if (!filenames) {
         return;
     }
@@ -92,4 +93,4 @@ module.exports = async function(filenames = '', options = {}) {
     });
 
     return componentHtmls;
-};
+}

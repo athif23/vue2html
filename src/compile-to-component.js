@@ -1,9 +1,9 @@
-const {rollup} = require('rollup');
+import plugins from './plugins';
+import { isVueFile, getComponentName, parseStrToFunc } from './utils';
+
+const { rollup } = require('rollup');
 const path = require('path');
 const fs = require('fs');
-
-const plugins = require('./plugins.js');
-const {isVueFile, getComponentName, parseStrToFunc} = require('./utils');
 
 function componentsToObject(components) {
     const result = `{
@@ -12,7 +12,7 @@ function componentsToObject(components) {
     return result;
 }
 
-module.exports = async function (filenames, options = {}) {
+export default async function(filenames, options = {}) {
     if (!filenames) {
         return;
     }
@@ -77,7 +77,7 @@ module.exports = async function (filenames, options = {}) {
     };
 
     const bundle = await rollup(inputOptions);
-    const {output} = await bundle.generate(outputOptions);
+    const { output } = await bundle.generate(outputOptions);
 
     // We need to remove __temp file!
     fs.access('__temp.js', fs.constants.F_OK, async err => {
@@ -103,4 +103,4 @@ module.exports = async function (filenames, options = {}) {
     const realComponents = parseStrToFunc(code)();
 
     return realComponents;
-};
+}

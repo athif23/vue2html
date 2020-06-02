@@ -5,9 +5,9 @@ const path = require('path');
 const chalk = require('chalk');
 const Fdir = require('fdir');
 
-const { resolvePaths, getDirectories, getVueFiles } = require('./utils.js');
+import { resolvePaths, getDirectories, getVueFiles } from './utils';
 
-const { compileToHTML } = require('./compile-to-html.js');
+import compileToHTML from './compile-to-html';
 
 function showHelp() {
     console.log(`

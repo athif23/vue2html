@@ -1,7 +1,7 @@
-const compileToHTML = require('./compile-to-html.js');
-const compileToComponent = require('./compile-to-component.js');
+import compileToHTML from './compile-to-html';
+import compileToComponent from './compile-to-component';
 
-module.exports = {
+export default {
     compileToHTML,
     compileToComponent
 };
