@@ -4,12 +4,21 @@ const fs = require('fs-extra');
 const { compileToHTML } = require('../dist');
 
 test.beforeEach(t => {
-    Object.assign(t.context, {props: 'Athif Humam'});
+    Object.assign(t.context, { props: 'Athif Humam' });
+});
+
+// Remove html_components folder after each test
+test.afterEach(async _ => {
+    await fs.rmdir('html_components', async err => {
+        if (err) {
+            throw err;
+        }
+    });
 });
 
 test('can render html', async t => {
-    const {App} = await compileToHTML('./test/fixtures/App.vue', {
-        props: {name: t.context.props}
+    const { App } = await compileToHTML('./test/fixtures/App.vue', {
+        props: { name: t.context.props }
     });
     const result =
         '<div data-server-rendered="true" data-v-d4599232><header data-v-d4599232>\n' +
@@ -18,20 +27,11 @@ test('can render html', async t => {
     t.true(App.includes(result));
 });
 
-// Remove html_components folder after each test
-test.afterEach(async t => {
-    await fs.rmdir('html_components', async err => {
-        if (err) {
-            throw err;
-        }
-    });
-})
-
 test('can render mutiple files', async t => {
-    const {App, Header} = await compileToHTML(
+    const { App, Header } = await compileToHTML(
         ['./test/fixtures/App.vue', './test/fixtures/Header.vue'],
         {
-            props: [{name: t.context.props}, {name: 'Header Props'}]
+            props: [{ name: t.context.props }, { name: 'Header Props' }]
         }
     );
     const appResult =
