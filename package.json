@@ -19,7 +19,7 @@
     "vue2html": "bin/cli"
   },
   "files": [
-    "src",
+    "dist/**/*.js",
     "bin"
   ],
   "dependencies": {
@@ -89,7 +89,8 @@
     "lint": "xo && remark . -qfo",
     "nyc": "cross-env NODE_ENV=test nyc ava",
     "test": "npm run lint && npm run ava",
-    "test-coverage": "npm run lint && npm run nyc"
+    "test-coverage": "npm run lint && npm run nyc",
+    "build": "rollup -c"
   },
   "xo": {
     "prettier": false,
