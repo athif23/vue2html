@@ -16,7 +16,7 @@
     "Muhammad Athif Humam <emailta.indo@gmail.com> (https://athif23.github.io/)"
   ],
   "bin": {
-    "vue2html": "bin/vue2html"
+    "vue2html": "bin/cli"
   },
   "dependencies": {
     "@rollup/plugin-commonjs": "^12.0.0",
