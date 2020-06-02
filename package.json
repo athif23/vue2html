@@ -15,9 +15,17 @@
   "contributors": [
     "Muhammad Athif Humam <emailta.indo@gmail.com> (https://athif23.github.io/)"
   ],
+  "bin": {
+    "vue2html": "bin/vue2html"
+  },
   "dependencies": {
     "@rollup/plugin-commonjs": "^12.0.0",
     "@rollup/plugin-node-resolve": "^8.0.0",
+    "chalk": "^4.0.0",
+    "fdir": "^3.4.2",
+    "fs-extra": "^9.0.0",
+    "minimist": "^1.2.5",
+    "ora": "^4.0.4",
     "rollup": "^2.12.0",
     "rollup-plugin-vue": "^5.1.9",
     "vue": "^2.6.11",
