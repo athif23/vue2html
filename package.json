@@ -94,7 +94,8 @@
       "object-curly-spacing": "off",
       "operator-linebreak": "off",
       "space-before-function-paren": "off",
-      "no-else-return": "off"
+      "no-else-return": "off",
+      "import/no-unassigned-import": "off"
     }
   }
 }
