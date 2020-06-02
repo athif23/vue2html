@@ -39,9 +39,11 @@ yarn add vue2html
 ## Usage
 
 Install `vue2html` globally,
+
 ```sh
 npm install -g vue2html
 ```
+
 Now, you just need to pass your `.vue` file as the argument. You can pass as much as you want.
 
 ```sh
