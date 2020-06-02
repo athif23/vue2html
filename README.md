@@ -41,7 +41,7 @@ yarn add vue2html
 The usage should be pretty simple, you just need to pass your `.vue` file as the argument. You can pass one or more to it.
 
 ```sh
-vue2html ./Component.vue, ./App.vue, ./Header.vue 
+vue2html Component.vue App.vue ./components 
 ```
 
 You can also pass dir path to it,
