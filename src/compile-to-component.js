@@ -40,8 +40,7 @@ module.exports = async function (filenames, options = {}) {
 
         let imports = '';
         vueComponents.forEach(com => {
-            console.log(com.path);
-            imports += `const ${com.name} = require('${com.path}');\n`;
+            imports += `const ${com.name} = require('./${com.path}');\n`;
         });
 
         await fs.writeFile('__temp.js', imports, err => {
@@ -93,7 +92,7 @@ module.exports = async function (filenames, options = {}) {
         });
     });
 
-    let {code} = output[0];
+    let { code } = output[0];
     // Remove iife wrapper if filenames is an Array
     if (Array.isArray(filenames)) {
         code = code.slice(14, -6);
