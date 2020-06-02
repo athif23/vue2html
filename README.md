@@ -38,7 +38,11 @@ yarn add vue2html
 
 ## Usage
 
-The usage should be pretty simple, you just need to pass your `.vue` file as the argument. You can pass one or more to it.
+Install `vue2html` globally,
+```sh
+npm install -g vue2html
+```
+Now, you just need to pass your `.vue` file as the argument. You can pass as much as you want.
 
 ```sh
 vue2html Component.vue App.vue ./components 
