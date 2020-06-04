@@ -137,7 +137,7 @@ export default async function(filenames, options = {}) {
 
     await fs.remove(templateDir('__template.js'));
     // Only run when tailwind options is true
-    defaultOptions.tailwind && (await fs.remove(copyResult[1]));
+    (defaultOptions.tailwind && await fs.remove(copyResult[1]));
 
     let { code } = output[0];
 
