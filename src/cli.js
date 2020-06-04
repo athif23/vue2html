@@ -5,7 +5,7 @@ const path = require('path');
 const chalk = require('chalk');
 const Fdir = require('fdir');
 
-import { resolvePaths, getDirectories, getVueFiles } from './utils';
+import { resolvePaths, getDirectories, getVueFiles, normalizeBoolean } from './utils';
 
 import compileToHTML from './compile-to-html';
 
@@ -18,15 +18,18 @@ Commands:
 Options:
   --help, -h                 [boolean] show help
   --version, -v              [boolean] show version
+  --tailwind                 [boolean] use tailwind plugin
+  --purge                    [boolean] use purgecss
   --config, -c               [string]  use specified config file
   --base                     [string]  public base path (default: /)
   --outDir=[name]            [string]  output directory (default: html_components)
+  --template, -t             [string] use specified server-renderer template.
 `);
 }
 
 console.log(chalk.cyan(`vue2html v${require('../package.json').version}`));
 (async () => {
-    const { _: components, help, h, version, v, outDir } = argv;
+    const { _: components, help, h, version, v, outDir, template, t, tailwind, purge } = argv;
 
     if (help || h) {
         showHelp();
@@ -57,9 +60,15 @@ console.log(chalk.cyan(`vue2html v${require('../package.json').version}`));
 
     // Start spinner
     await compileToHTML(paths.length === 1 ? paths[0] : paths, {
+        context: {
+            title: 'Title'
+        },
+        tailwind,
+        purge,
         writeToFile: true,
         outDir,
-        silent: false
+        silent: false,
+        template: template === undefined ? normalizeBoolean(t) : normalizeBoolean(template)
     });
 
     console.log(`Finished compiled in ${(Date.now() - start) / 1000}ms.`);
