@@ -1,4 +1,5 @@
 const path = require('path');
+const fs = require('fs-extra');
 
 function isVueFile(path = '') {
     const re = /(.vue)+/;
@@ -55,6 +56,68 @@ function resolvePaths(paths) {
     return paths;
 }
 
+function isStringAndEmpty(val) {
+    return typeof val === 'string' && val === '';
+}
+
+function normalizeBoolean(bool = '') {
+    const b = bool.toLowerCase ? bool.toLowerCase() : bool;
+    switch (b) {
+        case 'true':
+            return true;
+        case 'false':
+            return false;
+        case true:
+        case false:
+            return b;
+        default:
+            return b;
+    }
+}
+
+async function copyFirstComponent(components = []) {
+    if (components.length === 0) {
+        return components;
+    }
+
+    const firstC = components.shift();
+
+    const firstCDir = path.dirname(firstC.resolvePath);
+    const copyPath = path.join(firstCDir, '__copy__' + firstC.name + '.vue');
+    await fs.copyFile(firstC.resolvePath, copyPath, err => {
+        if (err) {
+            throw err;
+        }
+    });
+
+    firstC.path = convertSlash(
+        path.join(path.dirname(firstC.path), '__copy__' + firstC.name + '.vue')
+    );
+    firstC.resolvePath = copyPath;
+
+    components.unshift(firstC);
+
+    return [components, convertSlash(copyPath)];
+}
+
+async function copyAndAppend(fileFrom, fileTo, content = '') {
+    if (!fileFrom || !fileTo) {
+        return '';
+    }
+
+    await fs.copy(fileFrom, fileTo, err => {
+        if (err) {
+            throw err;
+        }
+    });
+
+    await fs.appendFile(fileTo, content, err => {
+        if (err) {
+            throw err;
+        }
+    });
+}
+
 export {
     isVueFile,
     getComponentName,
@@ -62,5 +125,9 @@ export {
     convertSlash,
     resolvePaths,
     getDirectories,
-    getVueFiles
+    getVueFiles,
+    isStringAndEmpty,
+    normalizeBoolean,
+    copyFirstComponent,
+    copyAndAppend
 };
