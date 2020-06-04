@@ -17,26 +17,13 @@
 
 * [Install](#install)
 * [Usage](#usage)
+* [Options](#options)
 * [Contributors](#contributors)
+* [Known Issues](#known-issues)
 * [License](#license)
 
 
 ## Install
-
-[npm][]:
-
-```sh
-npm install vue2html
-```
-
-[yarn][]:
-
-```sh
-yarn add vue2html
-```
-
-
-## Usage
 
 Install `vue2html` globally,
 
@@ -44,19 +31,24 @@ Install `vue2html` globally,
 npm install -g vue2html
 ```
 
-Now, you just need to pass your `.vue` file as the argument. You can pass as much as you want.
+## Usage
+
+Now, you just need to pass your `.vue` file as the argument. You can pass as much as you want. Directory or Components paths.
 
 ```sh
 vue2html Component.vue App.vue ./components 
 ```
 
-You can also pass dir path to it,
-
+Use `--help` or `-h` to see all the available options.
 ```sh
-vue2html ./components
+vue2html --help
 ```
 
 Or you can also call it programmatically.
+
+```sh
+npm install vue2html
+```
 
 ```js
 const { compileToHTML } = require('vue2html');
@@ -74,7 +66,7 @@ compileToHTML('./Component.vue', {
     `,
   },
   writeToFile: true
-}).then(({ Component }) => console.log(Component.html));
+});
 
 // Multiple paths
 compileToHTML(['./Component.vue', './Header.vue'], {
@@ -84,14 +76,19 @@ compileToHTML(['./Component.vue', './Header.vue'], {
     { color: 'black' }
   ],
   writeToFile: true
-})
+});
 ```
 
-> I don't know if it would work, but if you pass the folder path instead of component path, I think it would be fine to pass the props like the Multiple paths example above. Just remember to pass them in exact order.
+### Known Issues
+* If you use tailwind please remember that it would take more time to generate than without it, especially if you also use purge option. I mean that's just how it should be. I can't change it even if I want to.
+
+* Component's style included in other components. I don't know why this happens, and I honestly doesn't really want to care much about this right now. But don't worry if you use scoped style, it would be safe even if it included in other components... I think.
 
 ##### TODO
 
-* [ ] Add css plugins
+* [x] Add css
+* [x] Add postcss plugins
+* [x] Add Tailwindcss
 * [x] Can pass folder path as an argument, like `./components`
 * [ ] Add more test
 * [ ] Convert raw string instead of file
@@ -109,10 +106,3 @@ compileToHTML(['./Component.vue', './Header.vue'], {
 ## License
 
 [MIT](LICENSE) © [Muhammad Athif Humam](https://athif23.github.io/)
-
-
-## 
-
-[npm]: https://www.npmjs.com/
-
-[yarn]: https://yarnpkg.com/
