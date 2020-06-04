@@ -100,24 +100,6 @@ async function copyFirstComponent(components = []) {
     return [components, convertSlash(copyPath)];
 }
 
-async function copyAndAppend(fileFrom, fileTo, content = '') {
-    if (!fileFrom || !fileTo) {
-        return '';
-    }
-
-    await fs.copy(fileFrom, fileTo, err => {
-        if (err) {
-            throw err;
-        }
-    });
-
-    await fs.appendFile(fileTo, content, err => {
-        if (err) {
-            throw err;
-        }
-    });
-}
-
 export {
     isVueFile,
     getComponentName,
@@ -128,6 +110,5 @@ export {
     getVueFiles,
     isStringAndEmpty,
     normalizeBoolean,
-    copyFirstComponent,
-    copyAndAppend
+    copyFirstComponent
 };

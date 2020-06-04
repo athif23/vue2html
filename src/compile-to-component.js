@@ -4,8 +4,7 @@ import {
     getComponentName,
     parseStrToFunc,
     convertSlash,
-    copyFirstComponent,
-    copyAndAppend
+    copyFirstComponent
 } from './utils';
 
 const { rollup } = require('rollup');
@@ -54,32 +53,37 @@ export default async function(filenames, options = {}) {
         vueComponents = [component];
     }
 
-    const copyResult = await copyFirstComponent(vueComponents);
+    if (defaultOptions.tailwind) {
+        const copyResult = await copyFirstComponent(vueComponents);
 
-    vueComponents = copyResult[0];
+        vueComponents = copyResult[0];
 
-    // I don't know why, but it runs fine with this line.
-    setTimeout(() => {}, 500);
+        // I don't know why, but it runs fine with this line.
+        setTimeout(() => {}, 500);
 
-    const replace = require('replace-in-file');
-    await replace({
-        files: path.resolve(vueComponents[0].resolvePath),
-        from: /<style[ A-Za-z|A-Za-z]+>/,
-        to: match =>
-            match +
-            `\n@import url('${convertSlash(
-                path.relative(
-                    path.resolve(path.dirname(vueComponents[0].resolvePath)),
-                    path.resolve(
-                        '../',
-                        __dirname,
-                        '../template',
-                        'tailwind.css'
+        const replace = require('replace-in-file');
+        await replace({
+            files: path.resolve(vueComponents[0].resolvePath),
+            from: /<style[ A-Za-z|A-Za-z]+>/,
+            to: match =>
+                match +
+                `\n@import url('${convertSlash(
+                    path.relative(
+                        path.resolve(
+                            path.dirname(vueComponents[0].resolvePath)
+                        ),
+                        path.resolve(
+                            '../',
+                            __dirname,
+                            '../template',
+                            'tailwind.css'
+                        )
                     )
-                )
-            )}');\n`
-    });
+                )}');\n`
+        });
+    }
 
+    // Import each components
     vueComponents.forEach(com => {
         imports += `\nimport ${com.name.toLowerCase()} from '${
             com.path
@@ -89,15 +93,25 @@ export default async function(filenames, options = {}) {
     const templateDir = (file = '') =>
         path.resolve(__dirname, '../template', file);
 
-    await copyAndAppend(
+    await fs.copy(
         templateDir('template.js'),
         templateDir('__template.js'),
-        imports
+        err => {
+            if (err) {
+                throw err;
+            }
+        }
     );
+
+    await fs.appendFile(templateDir('__template.js'), imports, err => {
+        if (err) {
+            throw err;
+        }
+    });
 
     // Rollup `input` options
     const inputOptions = {
-        input: templateDir('template.js'),
+        input: templateDir('__template.js'),
         plugins: [
             ...defaultOptions.plugins,
             ...plugins({
@@ -120,8 +134,9 @@ export default async function(filenames, options = {}) {
     const bundle = await rollup(inputOptions);
     const { output } = await bundle.generate(outputOptions);
 
-    await fs.remove(templateDir('template.js'));
-    await fs.remove(copyResult[1]);
+    await fs.remove(templateDir('__template.js'));
+    // Only run when tailwind options is true
+    defaultOptions.tailwind && (await fs.remove(copyResult[1]));
 
     let { code } = output[0];
 
