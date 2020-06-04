@@ -1,29 +1,31 @@
 import plugins from './plugins';
-import { isVueFile, getComponentName, parseStrToFunc } from './utils';
+import {
+    isVueFile,
+    getComponentName,
+    parseStrToFunc,
+    convertSlash,
+    copyFirstComponent,
+    copyAndAppend
+} from './utils';
 
 const { rollup } = require('rollup');
 const path = require('path');
-const fs = require('fs');
-
-function componentsToObject(components) {
-    const result = `{
-  ${components.map(c => c.name)}
-}`;
-    return result;
-}
+const fs = require('fs-extra');
 
 export default async function(filenames, options = {}) {
     if (!filenames) {
         return;
     }
 
-    let input;
     let vueComponents;
+    let imports = '';
 
     // This is default options
     const defaultOptions = {
         props: {},
-        plugins: []
+        plugins: [],
+        tailwind: false,
+        purge: false
     };
 
     // Extend default options
@@ -34,43 +36,82 @@ export default async function(filenames, options = {}) {
             return {
                 name: getComponentName(file),
                 isVue: isVueFile(file),
-                path: file
+                path: convertSlash(
+                    path.relative(path.resolve(__dirname, '../template'), file)
+                ),
+                resolvePath: path.resolve(file)
             };
         });
-
-        let imports = '';
-        vueComponents.forEach(com => {
-            imports += `const ${com.name} = require('./${com.path}');\n`;
-        });
-
-        await fs.writeFile('__temp.js', imports, err => {
-            if (err) {
-                throw err;
-            }
-        });
-
-        input = path.resolve('__temp.js');
     } else {
-        input = path.resolve(filenames);
         const component = {
             name: getComponentName(filenames),
             isVue: isVueFile(filenames),
-            path: filenames
+            path: convertSlash(
+                path.relative(path.resolve(__dirname, '../template'), filenames)
+            ),
+            resolvePath: path.resolve(filenames)
         };
         vueComponents = [component];
     }
 
+    const copyResult = await copyFirstComponent(vueComponents);
+
+    vueComponents = copyResult[0];
+
+    // I don't know why, but it runs fine with this line.
+    setTimeout(() => {}, 500);
+
+    const replace = require('replace-in-file');
+    await replace({
+        files: path.resolve(vueComponents[0].resolvePath),
+        from: /<style[ A-Za-z|A-Za-z]+>/,
+        to: match =>
+            match +
+            `\n@import url('${convertSlash(
+                path.relative(
+                    path.resolve(path.dirname(vueComponents[0].resolvePath)),
+                    path.resolve(
+                        '../',
+                        __dirname,
+                        '../template',
+                        'tailwind.css'
+                    )
+                )
+            )}');\n`
+    });
+
+    vueComponents.forEach(com => {
+        imports += `\nimport ${com.name.toLowerCase()} from '${
+            com.path
+        }';\nexport const ${com.name} = ${com.name.toLowerCase()};\n`;
+    });
+
+    const templateDir = (file = '') =>
+        path.resolve(__dirname, '../template', file);
+
+    await copyAndAppend(
+        templateDir('template.js'),
+        templateDir('__template.js'),
+        imports
+    );
+
     // Rollup `input` options
     const inputOptions = {
-        input,
-        plugins: [...defaultOptions.plugins, ...plugins],
+        input: templateDir('template.js'),
+        plugins: [
+            ...defaultOptions.plugins,
+            ...plugins({
+                tailwind: defaultOptions.tailwind,
+                purge: defaultOptions.purge
+            })
+        ],
         external: ['vue']
     };
     // Rollup `output` options
     const outputOptions = {
         format: 'iife',
-        name: 'App',
-        sourcemap: false,
+        name: 'Components',
+        sourcemap: 'hidden',
         globals: {
             vue: 'Vue'
         }
@@ -79,28 +120,14 @@ export default async function(filenames, options = {}) {
     const bundle = await rollup(inputOptions);
     const { output } = await bundle.generate(outputOptions);
 
-    // We need to remove __temp file!
-    fs.access('__temp.js', fs.constants.F_OK, async err => {
-        if (err) {
-            return;
-        }
-
-        await fs.unlink('__temp.js', err => {
-            if (err) {
-                throw err;
-            }
-        });
-    });
+    await fs.remove(templateDir('template.js'));
+    await fs.remove(copyResult[1]);
 
     let { code } = output[0];
-    // Remove iife wrapper if filenames is an Array
-    if (Array.isArray(filenames)) {
-        code = code.slice(14, -6);
-    }
 
-    code += `return ${componentsToObject(vueComponents)};`;
+    code += '\nreturn Components;';
 
-    const realComponents = parseStrToFunc(code)();
+    const result = parseStrToFunc(code)();
 
-    return realComponents;
+    return result;
 }
