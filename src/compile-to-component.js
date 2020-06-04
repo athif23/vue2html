@@ -53,8 +53,9 @@ export default async function(filenames, options = {}) {
         vueComponents = [component];
     }
 
+    let copyResult;
     if (defaultOptions.tailwind) {
-        const copyResult = await copyFirstComponent(vueComponents);
+        copyResult = await copyFirstComponent(vueComponents);
 
         vueComponents = copyResult[0];
 
