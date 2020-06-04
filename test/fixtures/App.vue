@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <Header :name="name" />
+  <div class="flex blue">
+    <Header class="flex rounded-sm" :name="name" />
     Hello {{ name }}
   </div>
 </template>
@@ -17,7 +17,7 @@ export default {
 </script>
 
 <style scoped>
-div {
-  color: red;
-}
+  .blue {
+    @apply bg-blue-500;
+  }
 </style>

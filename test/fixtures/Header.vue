@@ -1,5 +1,5 @@
 <template>
-  <header>
+  <header class="test">
     This is header, {{ name }}
   </header>
 </template>
@@ -11,3 +11,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.test {
+  color: red;
+}
+</style>
