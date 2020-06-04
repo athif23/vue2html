@@ -1,60 +1,61 @@
 import Vue from 'vue';
 import compileToComponent from './compile-to-component';
-import { isVueFile, getComponentName } from './utils';
+import { isStringAndEmpty } from './utils';
 
 const fs = require('fs-extra');
 const path = require('path');
-
-const renderer = require('vue-server-renderer').createRenderer();
 
 export default async function(filenames = '', options = {}) {
     if (!filenames) {
         return;
     }
 
-    let componentsData;
+    const componentHtmls = {};
+    let renderer;
     let childSpinner = { stop: () => {}, start: () => {}, succeed: () => {} };
 
     // Extend default options
     const defaultOptions = {
         props: {},
         context: {},
+        template: '',
+        tailwind: false,
+        purge: false,
         writeToFile: false,
         outDir: 'html_components',
         silent: true
     };
     Object.assign(defaultOptions, options);
 
-    if (Array.isArray(filenames)) {
-        componentsData = filenames.map(file => ({
-            name: getComponentName(file),
-            isVue: isVueFile(file),
-            path: file
-        }));
+    if (
+        typeof defaultOptions.template !== 'boolean' ||
+        defaultOptions.template
+    ) {
+        const templatePath =
+            isStringAndEmpty(defaultOptions.template) ||
+            defaultOptions.template === true
+                ? path.resolve(__dirname, '../template', 'index.template.html')
+                : defaultOptions.template;
+        const template = await fs.readFile(templatePath, 'utf-8');
+
+        renderer = require('vue-server-renderer').createRenderer({
+            template,
+            runInNewContext: true
+        });
     } else {
-        componentsData = [
-            {
-                name: getComponentName(filenames),
-                isVue: isVueFile(filenames),
-                path: filenames
-            }
-        ];
+        renderer = require('vue-server-renderer').createRenderer();
     }
 
-    if (!defaultOptions.silent) {
-        childSpinner = require('ora')('Compile to normalized component');
-    }
+    childSpinner = require('ora')('Compile to normalized component');
 
+    childSpinner.start();
     const components = await compileToComponent(filenames, defaultOptions);
     childSpinner.stop();
 
-    const componentHtmls = {};
-
-    const outDirname = defaultOptions.outDir || 'html_components';
-
     // Make sure output directory exists
+    const outDirname = defaultOptions.outDir || 'html_components';
     await fs.ensureDir(outDirname);
-
+    // Loop trough components and render them to html
     Object.keys(components).forEach((key, idx) => {
         childSpinner.start(`Compiling ${key} component to HTML...`);
         let component = components[key];
@@ -84,7 +85,7 @@ export default async function(filenames = '', options = {}) {
                 componentHtmls[key] = html;
 
                 if (defaultOptions.writeToFile) {
-                    const filename = componentsData[idx].name + '.html';
+                    const filename = key + '.html';
                     await fs.writeFile(path.join(outDirname, filename), html);
                 }
             }
